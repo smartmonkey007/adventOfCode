@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "request": "launch",
+            "name": "Launch Program",
+            "type": "node",
+            // "program": "${workspaceFolder}/day1.ts",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "/home/smartmonkey/.deno/bin/deno",
+            "runtimeArgs": [
+                "run",
+                "--inspect-brk",
+                "-A",
+                "${file}"
+            ],
+            "attachSimplePort": 9229
+        }
+    ]
+}
