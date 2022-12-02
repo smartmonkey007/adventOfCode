@@ -1,5 +1,3 @@
-
-
 const puzzleData = await Deno.readTextFile('./data/day1-a.txt');
 const elves = puzzleData.split('\n\n')
     .map(meals => meals

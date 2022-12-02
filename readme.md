@@ -8,10 +8,16 @@ The rest will be a mini journal of the days. I do not expect to have time to
 finish all puzzles this year, but we will see how far we get before family and
 responsibilities catchup.
 
-## Setup
+# 2022
 
-    Setup of Deno was surprisingly easy and without many issues. There was an odd module not found error that cleared itself and debugging took a minute to setup. However, to run these simple code snippets, Deno is great.
+## Day 2 🪨🗞️✂️
+
+    This puzzle part 1 was fairly easy. But part 2 confused me a bit. It made me have to carefully evaluate the wins and loss strats and the point values. Also, deno complaining about indexing into the object type is something that I want to look closer at. The typing on this is fairly messy, but its late and I just want to be finished with it. :)
 
 ## Day 1
 
     Day 1 puzzles are always very easy warm ups. This was no exception. I was a little rusty on little things like sorting numbered arrays, but it was fairly straight forward.
+
+## Setup
+
+    Setup of Deno was surprisingly easy and without many issues. There was an odd module not found error that cleared itself and debugging took a minute to setup. However, to run these simple code snippets, Deno is great.
