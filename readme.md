@@ -10,6 +10,10 @@ responsibilities catchup.
 
 # 2022
 
+## Day 3 🔐
+
+    This puzzle was not very hard but I am very unhappy with the complexity of the solutions. There are a lot of iterations over small arrays. While this should be okay, it is something that I would rather simplify.
+
 ## Day 2 🪨🗞️✂️
 
     This puzzle part 1 was fairly easy. But part 2 confused me a bit. It made me have to carefully evaluate the wins and loss strats and the point values. Also, deno complaining about indexing into the object type is something that I want to look closer at. The typing on this is fairly messy, but its late and I just want to be finished with it. :)
