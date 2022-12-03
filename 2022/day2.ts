@@ -1,4 +1,4 @@
-const puzzleData = await Deno.readTextFile('./data/day2-a.txt');
+const puzzleData = await Deno.readTextFile('./2022/data/day2-a.txt');
 
 function sum(numbers: number[]): number {
     return numbers.reduce((current, next) => {
