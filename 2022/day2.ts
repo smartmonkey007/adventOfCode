@@ -1,4 +1,97 @@
-const puzzleData = await Deno.readTextFile('./2022/data/day2-a.txt');
+const enum Plays {
+    rock = 'a',
+    paper = 'b',
+    scissors = 'c'
+}
+
+const enum GuideStrategyA {
+    rock = 'x',
+    paper = 'y',
+    scissors = 'z'
+}
+
+const enum CountersWith {
+    rock = 'x',
+    paper = 'y',
+    scissors = 'z'
+}
+
+const enum GuideStrategyB {
+    lose = 'x',
+    tie = 'y',
+    win = 'z'
+}
+
+const enum PlayPoints {
+    rock = 1,
+    paper = 2,
+    scissors = 3
+
+}
+
+const enum WinPoints {
+    win = 6,
+    tie = 3,
+    lose = 0
+}
+
+type TypeGuide = {
+    [key in Plays] : {[key in GuideStrategyA] : WinPoints} & {v: PlayPoints};
+    } & {
+    v: { [key in CountersWith]: PlayPoints }
+}
+
+const guide: TypeGuide = {
+    [Plays.rock]: { 
+        [GuideStrategyA.rock]: WinPoints.tie, 
+        [GuideStrategyA.paper]: WinPoints.win, 
+        [GuideStrategyA.scissors]: WinPoints.lose, 
+        v: PlayPoints.rock },
+    [Plays.paper]: { 
+        [GuideStrategyA.rock]: WinPoints.lose, 
+        [GuideStrategyA.paper]: WinPoints.tie, 
+        [GuideStrategyA.scissors]: WinPoints.win, 
+        v: PlayPoints.paper },
+    [Plays.scissors]: { 
+        [GuideStrategyA.rock]: WinPoints.win, 
+        [GuideStrategyA.paper]: WinPoints.lose, 
+        [GuideStrategyA.scissors]: WinPoints.tie, 
+        v: PlayPoints.scissors },
+
+    v: { [CountersWith.rock]: PlayPoints.rock,[CountersWith.paper]: PlayPoints.paper, [CountersWith.scissors]: PlayPoints.scissors }
+}
+
+type TypeGuideB = {
+    [key in Plays]: { [key in GuideStrategyB]: WinPoints } &
+    { v: { [key in GuideStrategyB]: PlayPoints } };
+};
+
+const guideB: TypeGuideB = {
+    [Plays.rock]: {
+        [GuideStrategyB.lose]: WinPoints.lose, [GuideStrategyB.tie]: WinPoints.tie, [GuideStrategyB.win]: WinPoints.win,
+        v: {
+            [GuideStrategyB.lose]: PlayPoints.scissors,
+            [GuideStrategyB.tie]: PlayPoints.rock,
+            [GuideStrategyB.win]: PlayPoints.paper
+        }
+    },
+    [Plays.paper]: {
+        [GuideStrategyB.lose]: WinPoints.lose, [GuideStrategyB.tie]: WinPoints.tie, [GuideStrategyB.win]: WinPoints.win,
+        v: {
+            [GuideStrategyB.lose]: PlayPoints.rock,
+            [GuideStrategyB.tie]: PlayPoints.paper,
+            [GuideStrategyB.win]: PlayPoints.scissors
+        }
+    },
+    [Plays.scissors]: {
+        [GuideStrategyB.lose]: WinPoints.lose, [GuideStrategyB.tie]: WinPoints.tie, [GuideStrategyB.win]: WinPoints.win,
+        v: {
+            [GuideStrategyB.lose]: PlayPoints.paper,
+            [GuideStrategyB.tie]: PlayPoints.scissors,
+            [GuideStrategyB.win]: PlayPoints.rock
+        }
+    },
+};
 
 function sum(numbers: number[]): number {
     return numbers.reduce((current, next) => {
@@ -7,53 +100,45 @@ function sum(numbers: number[]): number {
 }
 
 function calcScore(
-    prc: { [x: string]: { [x: string]: any; }; v: { [x: string]: any; }; }, 
+    prc: TypeGuide | TypeGuideB,
     puzzleData: string,
     type: 1 | 2): number[] {
     return puzzleData
         .split('\n')
-        .map(p => p.toLowerCase().split(' ') as ['a' | 'b' | 'c', 'x', 'y', 'z'])
-        .map((game: ['a' | 'b' | 'c', 'x', 'y', 'z']) => {
-            const score = prc[game[0]][game[1]] + (type === 1 ? prc.v[game[1]] : prc[game[0]].v[game[1]]);
-            return score;
+        .map(p => p.toLowerCase().split(' ') as ['a' | 'b' | 'c', 'x' | 'y' | 'z'])
+        .map((game) => {
+            const score = prc[game[0]][game[1]] || 0;
+
+            if (type === 1) {
+                return score + ((prc as TypeGuide).v[game[1]] || 0);
+            } else {
+                return score + ((prc as TypeGuideB)[game[0]].v[game[1]] || 0);
+            }
         });
 }
 
+export async function solvePuzzle() {
 
-let guide: any = {
-    // x = Rock, y = paper, z = scissors
-    // Rock
-    a: {x: 3, y: 6, z: 0, v: 1 },
-    // Paper
-    b: { x: 0, y: 3, z: 6, v: 2 },
-    // Scissors
-    c: { x: 6, y: 0, z: 3, v: 3 },
+    const puzzleData = await Deno.readTextFile('./2022/data/day2-a.txt');
 
-    v: { x: 1, y: 2, z: 3 }
+    let games = calcScore(guide, puzzleData, 1);
+
+    let score = sum(games);
+
+    console.log(`day 1a result:  ${score}`);
+
+    games = calcScore(guideB, puzzleData, 2);
+
+    score = sum(games);
+
+    console.log(`day 1b result:  ${score}`);
+
+    console.log('another day bites the dust');
 }
 
-let games = calcScore(guide, puzzleData,1);
+if (import.meta.main) {
+    solvePuzzle();
+}
 
-let score = sum(games);
 
-console.log(`day 1a result:  ${score}`);
-
-const guide2= {
-    // rock 1, paper 2, scissors 3
-    // x = lose, y = draw, z = win
-    // Rock
-    a: { x: 0, y: 3, z: 6, v: {x: 3, y: 1, z: 2} },
-    // Paper
-    b: { x: 0, y: 3, z: 6, v: { x: 1, y: 2, z: 3 } },
-    // Scissors
-    c: { x: 0, y: 3, z: 6, v: { x: 2, y: 3, z: 1 } },
-} as any;
-
-games = calcScore(guide2, puzzleData, 2);
-
-score = sum(games);
-
-console.log(`day 1b result:  ${score}`);
-
-console.log('another day bites the dust');
 
